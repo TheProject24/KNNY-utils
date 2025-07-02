@@ -2,9 +2,6 @@ KNNY-utils API
 A RESTful API for managing Assignments, Lectures, Links, and Snippets built with Express and MongoDB.
 
 📦 Base URL
-arduino
-Copy
-Edit
 https://knny-utils-api.onrender.com/api
 📚 Assignments API
 📍 GET /assignments/
@@ -20,8 +17,7 @@ Response:
 Example Response:
 
 json
-Copy
-Edit
+```
 [
   {
     "_id": "60d...",
@@ -34,6 +30,7 @@ Edit
     "__v": 0
   }
 ]
+```
 📍 GET /assignments/:id
 Description:
 Fetch a specific assignment by its ID.
@@ -46,20 +43,20 @@ Response:
 
 500 Server Error
 
-📍 POST /assignments/
+### 📍 POST /assignments/
 Description:
 Create a new assignment.
 
 Request Body:
 
 json
-Copy
-Edit
+```
 {
   "course": "string",
   "instruction": "string",
   "dueDate": "ISO date string"
 }
+```
 Response:
 
 201 Created → New assignment object
@@ -68,21 +65,22 @@ Response:
 
 500 Server Error
 
-📍 PATCH /assignments/:id/
+### 📍 PATCH /assignments/:id/
 Description:
 Update assignment details (any subset of fields).
 
 Request Body:
 
 json
-Copy
-Edit
+```
 {
   "course": "string",
   "instruction": "string",
   "dueDate": "ISO date string",
   "submitted": true
 }
+
+```
 Response:
 
 200 OK → Updated assignment object
@@ -91,7 +89,7 @@ Response:
 
 500 Server Error
 
-📍 PATCH /assignments/:id/submit
+### 📍 PATCH /assignments/:id/submit
 Description:
 Mark an assignment as submitted.
 
@@ -103,7 +101,7 @@ Response:
 
 500 Server Error
 
-📍 DELETE /assignments/:id
+### 📍 DELETE /assignments/:id
 Description:
 Delete an assignment by ID.
 
@@ -118,15 +116,14 @@ Response:
 Example Response:
 
 json
-Copy
-Edit
+```
 {
   "message": "Assignment deleted successfully"
 }
-📑 Assignment Object Structure
+```
+# 📑 Assignment Object Structure
 json
-Copy
-Edit
+```
 {
   "_id": "string",
   "course": "string",
@@ -137,8 +134,9 @@ Edit
   "updatedAt": "ISO date string",
   "__v": 0
 }
+```
 🎓 Lectures API
-📍 GET /lectures/
+### 📍 GET /lectures/
 Description:
 Fetch all lectures.
 
@@ -148,7 +146,7 @@ Response:
 
 500 Server Error
 
-📍 GET /lectures/:id
+### 📍 GET /lectures/:id
 Description:
 Fetch a lecture by ID.
 
@@ -160,20 +158,20 @@ Response:
 
 500 Server Error
 
-📍 POST /lectures/
+### 📍 POST /lectures/
 Description:
 Create a new lecture.
 
 Request Body:
 
 json
-Copy
-Edit
+```
 {
   "title": "string",
   "description": "string",
   "files": ["string", "string"] // optional array of file URLs or names
 }
+```
 Response:
 
 201 Created → New lecture object
@@ -182,20 +180,20 @@ Response:
 
 500 Server Error
 
-📍 PATCH /lectures/:id
+### 📍 PATCH /lectures/:id
 Description:
 Update lecture fields.
 
 Request Body: (any fields)
 
 json
-Copy
-Edit
+```
 {
   "title": "string",
   "description": "string",
   "files": ["string"]
 }
+```
 Response:
 
 200 OK → Updated lecture object
@@ -204,7 +202,7 @@ Response:
 
 500 Server Error
 
-📍 DELETE /lectures/:id
+### 📍 DELETE /lectures/:id
 Description:
 Delete a lecture by ID.
 
@@ -218,8 +216,7 @@ Response:
 
 📑 Lecture Object Structure
 json
-Copy
-Edit
+```
 {
   "_id": "string",
   "title": "string",
@@ -229,8 +226,9 @@ Edit
   "updatedAt": "ISO date string",
   "__v": 0
 }
+```
 🔗 Links API
-📍 GET /links/
+### 📍 GET /links/
 Description:
 Fetch all links.
 
@@ -240,7 +238,7 @@ Response:
 
 500 Server Error
 
-📍 GET /links/tag/:tag
+### 📍 GET /links/tag/:tag
 Description:
 Fetch links filtered by a specific tag.
 
@@ -252,7 +250,7 @@ Response:
 
 500 Server Error
 
-📍 GET /links/:id
+### 📍 GET /links/:id
 Description:
 Fetch a link by ID.
 
@@ -264,20 +262,20 @@ Response:
 
 500 Server Error
 
-📍 POST /links/
+### 📍 POST /links/
 Description:
 Create a new link.
 
 Request Body:
 
 json
-Copy
-Edit
+```
 {
   "title": "string",
   "url": "string",
   "tag": "string" // optional, default: "Generic"
 }
+```
 Response:
 
 201 Created → New link object
@@ -286,20 +284,20 @@ Response:
 
 500 Server Error
 
-📍 PATCH /links/:id
+### 📍 PATCH /links/:id
 Description:
 Update link details.
 
 Request Body: (any fields)
 
 json
-Copy
-Edit
+```
 {
   "title": "string",
   "url": "string",
   "tag": "string"
 }
+```
 Response:
 
 200 OK → Updated link object
@@ -308,7 +306,7 @@ Response:
 
 500 Server Error
 
-📍 DELETE /links/:id
+### 📍 DELETE /links/:id
 Description:
 Delete a link by ID.
 
@@ -322,8 +320,7 @@ Response:
 
 📑 Link Object Structure
 json
-Copy
-Edit
+```
 {
   "_id": "string",
   "title": "string",
@@ -331,8 +328,9 @@ Edit
   "tag": "string",
   "__v": 0
 }
+```
 💻 Snippets API
-📍 GET /snippets/
+### 📍 GET /snippets/
 Description:
 Fetch all code snippets.
 
@@ -342,7 +340,7 @@ Response:
 
 500 Server Error
 
-📍 GET /snippets/:id
+### 📍 GET /snippets/:id
 Description:
 Fetch a snippet by ID.
 
@@ -354,15 +352,14 @@ Response:
 
 500 Server Error
 
-📍 POST /snippets/
+### 📍 POST /snippets/
 Description:
 Create a new code snippet.
 
 Request Body:
 
 json
-Copy
-Edit
+```
 {
   "title": "string",
   "language": "string",
@@ -370,6 +367,7 @@ Edit
   "tags": "string",       // optional
   "description": "string" // optional
 }
+```
 Response:
 
 201 Created → New snippet object
@@ -380,8 +378,7 @@ Response:
 
 📑 Snippet Object Structure
 json
-Copy
-Edit
+```
 {
   "_id": "string",
   "title": "string",
@@ -391,6 +388,8 @@ Edit
   "description": "string",
   "__v": 0
 }
+
+```
 🛠️ Error Handling
 All endpoints use centralized middleware to catch and respond with clear error messages and appropriate HTTP status codes.
 
