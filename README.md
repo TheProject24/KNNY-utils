@@ -8,7 +8,7 @@ A simple RESTful API for managing student assignments built with **Express** and
 
 ## 📦 Base URL
 
-http://<your-server-url>/api/assignments
+http:///api/assignments
 
 ---
 
@@ -41,7 +41,7 @@ Example Response
 ]
 
 ```
-📍 GET `/api/assignments/:id`
+### 📍 GET `/api/assignments/:id`
 Description:
 Fetch a specific assignment by ID.
 
@@ -53,7 +53,7 @@ Response:
 
 500 Server Error
 
-📍 POST `/api/assignments/`
+### 📍 POST `/api/assignments/`
 Description:
 Create a new assignment.
 
@@ -74,7 +74,7 @@ Response:
 
 500 Server Error
 
-📍 PATCH `/api/assignments/:id/`
+### 📍 PATCH `/api/assignments/:id/`
 Description:
 Update assignment details by ID.
 
@@ -97,7 +97,7 @@ Response:
 
 500 Server Error
 
-📍 PATCH `/api/assignments/:id/submit`
+### 📍 PATCH `/api/assignments/:id/submit`
 Description:
 Mark an assignment as submitted.
 
@@ -109,7 +109,7 @@ Response:
 
 500 Server Error
 
-📍 DELETE `/api/assignments/:id`
+### 📍 DELETE `/api/assignments/:id`
 Description:
 Delete an assignment by ID.
 
