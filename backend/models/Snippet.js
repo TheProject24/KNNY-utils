@@ -1,4 +1,4 @@
-const { request } = require('express');
+
 const mongoose = require('mongoose');
 
 const SnippetSchema = mongoose.Schema({
