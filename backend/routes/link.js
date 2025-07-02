@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Link = require('../models/Link');
-const handleNotFound = require('../utils/responseHelpers');
-const handleServerError = require('../utils/responseHelpers')
+const {handleServerError, handleNotFound} = require('../middleware/responseHelpers');
 
 router.get('/', async (req, res) => {
 

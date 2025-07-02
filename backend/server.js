@@ -14,9 +14,11 @@ app.use('uploads', express.static('uploads'));
 const assignmentsRoutes = require('./routes/assignments');
 const lecturesRoutes = require('./routes/lectures');
 const linksRoutes = require('./routes/link');
+const snippetsRoutes = require('./routes/snippet');
 app.use('/api/assignments', assignmentsRoutes);
 app.use('/api/lectures', lecturesRoutes);
 app.use('/api/links', linksRoutes);
+app.use('/api/snippets', snippetsRoutes);
 
 
 //*Mongoose connection
