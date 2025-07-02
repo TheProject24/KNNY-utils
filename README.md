@@ -2,6 +2,7 @@ KNNY-utils API
 A RESTful API for managing Assignments, Lectures, Links, and Snippets built with Express and MongoDB.
 
 DIR structure
+```
 |KNNY-UTILS
 ------|backend
 ------------|middleware (housing responseHelpers, errorHandler and upload)
@@ -17,6 +18,7 @@ DIR structure
 -----------|css(housing styles.css)
 -----------|js(housing interactive features of the program)
 -----------index.html
+```
 
 📦 Base URL
 https://knny-utils-api.onrender.com/api
