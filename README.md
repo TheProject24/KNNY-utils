@@ -8,7 +8,8 @@ A simple RESTful API for managing student assignments built with **Express** and
 
 ## 📦 Base URL
 
-http:///api/assignments
+For the API
+https://knny-utils-api.onrender.com
 
 ---
 
