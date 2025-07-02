@@ -1,33 +1,27 @@
-# KNNY-utils
+KNNY-utils API
+A RESTful API for managing Assignments, Lectures, Links, and Snippets built with Express and MongoDB.
 
-# 📚 Assignments API
+📦 Base URL
+arduino
+Copy
+Edit
+https://knny-utils-api.onrender.com/api
+📚 Assignments API
+📍 GET /assignments/
+Description:
+Fetch all assignments sorted by newest first.
 
-A simple RESTful API for managing student assignments built with **Express** and **MongoDB**.
+Response:
 
----
+200 OK → Array of assignment objects
 
-## 📦 Base URL
+500 Server Error
 
-For the API
-https://knny-utils-api.onrender.com
+Example Response:
 
----
-
-## 📖 Endpoints
-
----
-
-### 📍 GET `/api/assignments/`
-
-**Description:**  
-Fetch all assignments, sorted by newest first.
-
-**Response:**
-- `200 OK` → Array of assignment objects
-- `500 Server Error`
-
-Example Response
-```json
+json
+Copy
+Edit
 [
   {
     "_id": "60d...",
@@ -40,56 +34,55 @@ Example Response
     "__v": 0
   }
 ]
-
-```
-### 📍 GET `/api/assignments/:id`
+📍 GET /assignments/:id
 Description:
-Fetch a specific assignment by ID.
+Fetch a specific assignment by its ID.
 
 Response:
 
 200 OK → Assignment object
 
-404 Not Found
+404 Not Found → If ID doesn’t exist
 
 500 Server Error
 
-### 📍 POST `/api/assignments/`
+📍 POST /assignments/
 Description:
 Create a new assignment.
 
 Request Body:
-```json
+
+json
+Copy
+Edit
 {
   "course": "string",
   "instruction": "string",
   "dueDate": "ISO date string"
 }
-
-```
 Response:
 
 201 Created → New assignment object
 
-400 Bad Request if missing fields
+400 Bad Request → Missing required fields
 
 500 Server Error
 
-### 📍 PATCH `/api/assignments/:id/`
+📍 PATCH /assignments/:id/
 Description:
-Update assignment details by ID.
+Update assignment details (any subset of fields).
 
-Request Body: (any of the following)
+Request Body:
 
-```json
-
+json
+Copy
+Edit
 {
   "course": "string",
   "instruction": "string",
   "dueDate": "ISO date string",
   "submitted": true
 }
-```
 Response:
 
 200 OK → Updated assignment object
@@ -98,19 +91,19 @@ Response:
 
 500 Server Error
 
-### 📍 PATCH `/api/assignments/:id/submit`
+📍 PATCH /assignments/:id/submit
 Description:
 Mark an assignment as submitted.
 
 Response:
 
-200 OK → Updated assignment object
+200 OK → Updated assignment object with "submitted": true
 
 404 Not Found
 
 500 Server Error
 
-### 📍 DELETE `/api/assignments/:id`
+📍 DELETE /assignments/:id
 Description:
 Delete an assignment by ID.
 
@@ -124,148 +117,287 @@ Response:
 
 Example Response:
 
-```json
-
+json
+Copy
+Edit
 {
   "message": "Assignment deleted successfully"
 }
-```
 📑 Assignment Object Structure
-```json
-
+json
+Copy
+Edit
 {
   "_id": "string",
   "course": "string",
   "instruction": "string",
   "dueDate": "ISO date string",
-  "submitted": true/false,
+  "submitted": true,
   "createdAt": "ISO date string",
   "updatedAt": "ISO date string",
   "__v": 0
 }
+🎓 Lectures API
+📍 GET /lectures/
+Description:
+Fetch all lectures.
 
-```
+Response:
 
-Knny Utils API
-Welcome to Knny Utils API — a simple, powerful backend service for managing Assignments, Lectures, Links, and Snippets. It’s built with Node.js, Express, and MongoDB (Mongoose), hosted live at https://knny-utils-api.onrender.com.
+200 OK → Array of lecture objects
 
-🚀 Quick Start
-Base URL: https://knny-utils-api.onrender.com/api
+500 Server Error
 
-Use any HTTP client (Postman, curl, or your frontend) to interact with the endpoints.
+📍 GET /lectures/:id
+Description:
+Fetch a lecture by ID.
 
-📦 API Endpoints & Routes
-Assignments
-GET /api/assignments
-Get all assignments
+Response:
 
-POST /api/assignments
-Create a new assignment
+200 OK → Lecture object
 
-GET /api/assignments/:id
-Get an assignment by ID
+404 Not Found
 
-PATCH /api/assignments/:id
-Update assignment fields
+500 Server Error
 
-PATCH /api/assignments/:id/submit
-Mark assignment as submitted
+📍 POST /lectures/
+Description:
+Create a new lecture.
 
-DELETE /api/assignments/:id
-Delete an assignment
+Request Body:
 
-Lectures
-GET /api/lectures
-List all lectures
+json
+Copy
+Edit
+{
+  "title": "string",
+  "description": "string",
+  "files": ["string", "string"] // optional array of file URLs or names
+}
+Response:
 
-POST /api/lectures
-Add a new lecture
+201 Created → New lecture object
 
-GET /api/lectures/:id
-Get lecture details
+400 Bad Request
 
-PATCH /api/lectures/:id
-Update lecture info
+500 Server Error
 
-DELETE /api/lectures/:id
-Remove a lecture
+📍 PATCH /lectures/:id
+Description:
+Update lecture fields.
 
-Links
-GET /api/links
-Get all links
+Request Body: (any fields)
 
-GET /api/links/tag/:tag
-Filter links by tag (e.g., /tag/tutorial)
+json
+Copy
+Edit
+{
+  "title": "string",
+  "description": "string",
+  "files": ["string"]
+}
+Response:
 
-POST /api/links
-Add a new link
+200 OK → Updated lecture object
 
-GET /api/links/:id
-Get a specific link
+404 Not Found
 
-PATCH /api/links/:id
-Update link info
+500 Server Error
 
-DELETE /api/links/:id
-Delete a link
+📍 DELETE /lectures/:id
+Description:
+Delete a lecture by ID.
 
-Snippets
-GET /api/snippets
-List all code snippets
+Response:
 
-POST /api/snippets
-Create a snippet
+200 OK → Deletion success message
 
-GET /api/snippets/:id
-Get snippet details
+404 Not Found
 
-Note: Snippets do not support update or delete routes in this version.
+500 Server Error
 
-🗂️ Data Models Overview
-Assignment
-course (String, required) — Course name
+📑 Lecture Object Structure
+json
+Copy
+Edit
+{
+  "_id": "string",
+  "title": "string",
+  "description": "string",
+  "files": ["string"],
+  "createdAt": "ISO date string",
+  "updatedAt": "ISO date string",
+  "__v": 0
+}
+🔗 Links API
+📍 GET /links/
+Description:
+Fetch all links.
 
-instruction (String, required) — Assignment instructions
+Response:
 
-givenDate (Date, default = now)
+200 OK → Array of link objects
 
-dueDate (Date, required)
+500 Server Error
 
-submitted (Boolean, default = false)
+📍 GET /links/tag/:tag
+Description:
+Fetch links filtered by a specific tag.
 
-Auto timestamps for creation and updates
+Response:
 
-Lecture
-title (String, required)
+200 OK → Array of matching link objects
 
-description (String, required)
+404 Not Found → If no links found for tag
 
-files (Array of Strings, default empty) — URLs or filenames of lecture files
+500 Server Error
 
-Auto timestamps included
+📍 GET /links/:id
+Description:
+Fetch a link by ID.
 
-Link
-title (String, required)
+Response:
 
-url (String, required)
+200 OK → Link object
 
-tag (String, default: 'Generic')
+404 Not Found
 
-Snippet
-title (String, required, default: "Code Snippet")
+500 Server Error
 
-language (String, required, default: "Code Language")
+📍 POST /links/
+Description:
+Create a new link.
 
-code (String, required, default: "Code Content")
+Request Body:
 
-tags (String, default: "Random")
+json
+Copy
+Edit
+{
+  "title": "string",
+  "url": "string",
+  "tag": "string" // optional, default: "Generic"
+}
+Response:
 
-description (String, default: "No Description")
+201 Created → New link object
 
-⚙️ Server Setup (for local development)
-Clone the repo
+400 Bad Request
 
-Create a .env file with your MongoDB connection string as MONGO_URI
+500 Server Error
+
+📍 PATCH /links/:id
+Description:
+Update link details.
+
+Request Body: (any fields)
+
+json
+Copy
+Edit
+{
+  "title": "string",
+  "url": "string",
+  "tag": "string"
+}
+Response:
+
+200 OK → Updated link object
+
+404 Not Found
+
+500 Server Error
+
+📍 DELETE /links/:id
+Description:
+Delete a link by ID.
+
+Response:
+
+200 OK → Deletion success message
+
+404 Not Found
+
+500 Server Error
+
+📑 Link Object Structure
+json
+Copy
+Edit
+{
+  "_id": "string",
+  "title": "string",
+  "url": "string",
+  "tag": "string",
+  "__v": 0
+}
+💻 Snippets API
+📍 GET /snippets/
+Description:
+Fetch all code snippets.
+
+Response:
+
+200 OK → Array of snippet objects
+
+500 Server Error
+
+📍 GET /snippets/:id
+Description:
+Fetch a snippet by ID.
+
+Response:
+
+200 OK → Snippet object
+
+404 Not Found
+
+500 Server Error
+
+📍 POST /snippets/
+Description:
+Create a new code snippet.
+
+Request Body:
+
+json
+Copy
+Edit
+{
+  "title": "string",
+  "language": "string",
+  "code": "string",
+  "tags": "string",       // optional
+  "description": "string" // optional
+}
+Response:
+
+201 Created → New snippet object
+
+400 Bad Request
+
+500 Server Error
+
+📑 Snippet Object Structure
+json
+Copy
+Edit
+{
+  "_id": "string",
+  "title": "string",
+  "language": "string",
+  "code": "string",
+  "tags": "string",
+  "description": "string",
+  "__v": 0
+}
+🛠️ Error Handling
+All endpoints use centralized middleware to catch and respond with clear error messages and appropriate HTTP status codes.
+
+⚙️ Server Setup (Local)
+Clone this repo
+
+Create .env with your MongoDB URI under MONGO_URI
 
 Run:
 
@@ -274,21 +406,10 @@ Copy
 Edit
 npm install
 npm start
-The server runs on http://localhost:5000
+Server runs on http://localhost:5000
 
-🛠️ Error Handling
-All routes use a centralized error handler middleware to respond with meaningful error messages and proper HTTP status codes.
+🌐 Hosted API
+Test and use the live API at:
 
-🎯 Why Use This API?
-Manage your educational resources easily (assignments, lectures)
-
-Store useful links tagged for quick filtering
-
-Keep your code snippets organized by language and tags
-
-Lightweight, RESTful, and ready for your frontend apps or automation scripts
-
-🔗 Hosted API
-Explore or test the live API here:
 https://knny-utils-api.onrender.com
 
