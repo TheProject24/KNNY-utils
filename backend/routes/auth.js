@@ -12,6 +12,16 @@ router.post('/register', async (req, res) => {
         if (!username || !email || !password) {
             return res.status(400).json({ error: 'All fields are required' });
         }
+
+        const userExists = await User.findOne({ username })
+        if (userExists) {
+            return res.status(400).json({ error: 'Username Already Exists'})
+        }
+        const emailExists = await User.findOne({ username })
+        if (emailExists) {
+            return res.status(400).json({ error: 'Email Already Exists' });
+        }
+
         const normalizedRole = req.body.role ? req.body.role.toLowerCase() : 'student';
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
