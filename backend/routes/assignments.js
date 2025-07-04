@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Assignment = require('../models/Assignment');
 const { authenticate, authorizeRole } = require('../middleware/authMiddleware');
+const { handleNotFound, handleServerError } = require('../middleware/responseHelpers');
 
 router.get('/', async (req, res) => {
 
@@ -67,14 +68,11 @@ router.patch('/:id/submit', authenticate, authorizeRole('student'), async (req, 
             { new: true }
         );
 
-        if (!updatedAssignment) {
-            return res.status(404).json({ error: 'Assignment not found' });
-        }
+        handleNotFound(updatedAssignment, res);
 
         return res.status(200).json(updatedAssignment);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server Error" });
+        handleServerError(err, res);
     }
 })
 
@@ -84,14 +82,11 @@ router.delete('/:id', async (req, res) => {
         const assgID = req.params.id;
         const deletedAssignment = await Assignment.findByIdAndDelete(assgID);
 
-        if (!deletedAssignment) {
-            return res.status(404).json({ error: 'Assignment not found' });
-        }
+        handleNotFound(deletedAssignment, res);
 
         return res.status(200).json({ message: 'Assignment deleted successfully' });
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: 'Server Error' });
+        handleServerError(err, res);
     }
 })
 

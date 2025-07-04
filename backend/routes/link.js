@@ -53,7 +53,7 @@ router.get('/:id', async (req, res) => {
     try {
         const link = await Link.findById(req.params.id);
 
-        if (handleNotFound(link, res));
+        handleNotFound(link, res);
 
         return res.status(200).json(link);
     } catch (err) {
@@ -66,7 +66,7 @@ router.delete('/:id', async (req, res) => {
     try {
         const deletedLink = await Link.findByIdAndDelete(req.params.id);
 
-        if (handleNotFound(deletedLink, res));
+        handleNotFound(deletedLink, res);
 
         return res.status(200).json({ error: 'File deleted' });
     } catch (err) {
@@ -86,7 +86,7 @@ router.patch('/:id', async (req, res) => {
             { new:  true }
         )
 
-        if (handleNotFound(updatedLink, res));
+        handleNotFound(updatedLink, res);
 
         return res.status(200).json(updatedLink);
     } catch (err) {
@@ -99,7 +99,7 @@ router.get('/tag/:tag', async (req, res) => {
     try{
         const links = await Link.find({ tag: req.params.tag })
 
-        if (handleNotFound(links, res));
+        handleNotFound(links, res);
 
         return res.status(200).json(links)
     } catch (err) {
