@@ -13,16 +13,17 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
-        const userExists = await User.findOne({ username })
+        const userExists = await User.findOne({ username });
         if (userExists) {
-            return res.status(400).json({ error: 'Username Already Exists'})
-        }
-        const emailExists = await User.findOne({ username })
-        if (emailExists) {
-            return res.status(400).json({ error: 'Email Already Exists' });
+            return res.status(400).json({ error: 'Username already exists' });
         }
 
-        const normalizedRole = req.body.role ? req.body.role.toLowerCase() : 'student';
+        const emailExists = await User.findOne({ email }); // Fixed: Check email instead of username
+        if (emailExists) {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
+
+        const normalizedRole = role ? role.toLowerCase() : 'student';
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
             username,
@@ -33,14 +34,12 @@ router.post('/register', async (req, res) => {
 
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
-
     } catch (err) {
         handleServerError(err, res);
     }
 });
 
 router.post('/login', async (req, res) => {
-
     try {
         const { email, password } = req.body;
 
@@ -49,13 +48,11 @@ router.post('/login', async (req, res) => {
         }
 
         const userFound = await User.findOne({ email });
-
         if (!userFound) {
             return res.status(400).json({ error: 'Invalid credentials' });
         }
 
         const isPasswordValid = bcrypt.compareSync(password, userFound.password);
-
         if (!isPasswordValid) {
             return res.status(400).json({ error: 'Incorrect password' });
         }
@@ -67,7 +64,6 @@ router.post('/login', async (req, res) => {
         );
 
         res.json({ token });
-
     } catch (err) {
         handleServerError(err, res);
     }
