@@ -40,23 +40,43 @@ function logout() {
 // Login Form Submission
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
+
+    const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
 
+    if (!email || !password) {
+        showToast('Please enter both email and password', 'error');
+        return;
+    }
+
     try {
-        const response = await apiRequest('/auth/login', {
+        const response = await fetch('https://knny-utils-api.onrender.com/api/auth/login', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({ email, password })
         });
-        
-        localStorage.setItem('token', response.token);
+
+        // Check for non-200/201 status
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Login failed');
+        }
+
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+
         checkAuthToken();
         closeModal('loginModal');
         showToast('Login successful', 'success');
+
     } catch (error) {
         showToast('Login failed: ' + error.message, 'error');
     }
 });
+
+
 
 // Register Form Submission
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
@@ -70,7 +90,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             method: 'POST',
             body: JSON.stringify({ username, email, password })
         });
-        
+
         closeModal('registerModal');
         showToast('Registration successful, please login', 'success');
         showLoginModal();
