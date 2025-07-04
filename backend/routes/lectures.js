@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const upload = require('../middleware/upload');
 const Lecture = require('../models/Lecture');
-const { Console } = require('console');
 const router = express.Router();
 
 router.get('/', async (req, res) => {

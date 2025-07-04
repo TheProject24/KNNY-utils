@@ -1,117 +1,61 @@
 async function loadLectures() {
-    const container = document.getElementById('lecturesList');
-    container.innerHTML = '<div class="loading"><div class="spinner"></div>Loading lectures...</div>';
-
     try {
-        const lectures = await apiCall(`${API_BASE}/lectures`);
-        displayLectures(lectures);
+        const lectures = await apiRequest('/lectures');
+        renderLectures(lectures);
     } catch (error) {
-        container.innerHTML = '<div class="loading">Failed to load lectures</div>';
+        showToast('Failed to load lectures', 'error');
     }
 }
 
-function displayLectures(lectures) {
+function renderLectures(lectures) {
     const container = document.getElementById('lecturesList');
+    container.innerHTML = '';
 
-    if (lectures.length === 0) {
-        container.innerHTML = '<div class="loading">No lectures found</div>';
-        return;
-    }
-
-    container.innerHTML = lectures.map(lecture => `
-        <div class="item-card">
-            <div class="item-title">${lecture.title}</div>
-            <div class="item-meta">Created: ${new Date(lecture.createdAt).toLocaleDateString()}</div>
-            <div class="item-description">${lecture.description}</div>
-            ${lecture.files && lecture.files.length > 0 ? `
-                <div style="margin: 15px 0;">
+    lectures.forEach(lecture => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="card-header">
+                <div>
+                    <div class="card-title">${lecture.title}</div>
+                    <div class="card-meta">${new Date(lecture.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-sm btn-secondary" onclick="editLecture('${lecture._id}')">Edit</button>
+                    <button class="btn btn-sm btn-error" onclick="deleteLecture('${lecture._id}')">Delete</button>
+                </div>
+            </div>
+            <p>${lecture.description}</p>
+            ${lecture.files.length > 0 ? `
+                <div style="margin-top: 1rem;">
                     <strong>Files:</strong>
-                    ${lecture.files.map(file => `<span class="tag">${file}</span>`).join(' ')}
+                    <div class="file-list">
+                        ${lecture.files.map(file => `
+                            <div class="file-item">
+                                <span>${file.split('/').pop()}</span>
+                                <a href="${API_BASE_URL.replace('/api', '')}/${file}" target="_blank" class="btn btn-sm">Download</a>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             ` : ''}
-            <div class="item-actions">
-                <button class="btn btn-warning" onclick="editLecture('${lecture._id}')">Edit</button>
-                <button class="btn btn-danger" onclick="deleteLecture('${lecture._id}')">Delete</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-async function addLecture(event) {
-    event.preventDefault();
-
-    const form = event.target;
-    const isEdit = form.dataset.editId;
-
-    const lectureData = {
-        title: document.getElementById('lectureTitle').value,
-        description: document.getElementById('lectureDescription').value
-    };
-
-    try {
-        if (isEdit) {
-            await apiCall(`${API_BASE}/lectures/${isEdit}`, {
-                method: 'PATCH',
-                body: JSON.stringify(lectureData)
-            });
-        } else {
-            await apiCall(`${API_BASE}/lectures`, {
-                method: 'POST',
-                body: JSON.stringify(lectureData)
-            });
-        }
-
-        // Reset form
-        form.reset();
-        delete form.dataset.editId;
-        const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.textContent = 'Add Lecture';
-        submitBtn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-
-        loadLectures();
-    } catch (error) {
-        console.error('Failed to save lecture:', error);
-    }
+        `;
+        container.appendChild(card);
+    });
 }
 
 async function deleteLecture(id) {
     if (confirm('Are you sure you want to delete this lecture?')) {
         try {
-            await apiCall(`${API_BASE}/lectures/${id}`, {
-                method: 'DELETE'
-            });
+            await apiRequest(`/lectures/${id}`, { method: 'DELETE' });
+            showToast('Lecture deleted successfully', 'success');
             loadLectures();
         } catch (error) {
-            console.error('Failed to delete lecture:', error);
+            showToast('Failed to delete lecture', 'error');
         }
     }
 }
 
-async function editLecture(id) {
-    try {
-        const lecture = await apiCall(`${API_BASE}/lectures/${id}`);
-
-        document.getElementById('lectureTitle').value = lecture.title;
-        document.getElementById('lectureDescription').value = lecture.description;
-
-        const form = document.getElementById('lectureForm');
-        const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.textContent = 'Update Lecture';
-        submitBtn.style.background = 'linear-gradient(135deg, #ed8936, #dd6b20)';
-
-        form.dataset.editId = id;
-        form.scrollIntoView({ behavior: 'smooth' });
-    } catch (error) {
-        console.error('Failed to load lecture for editing:', error);
-    }
-}
-
-function filterLectures() {
-    const searchTerm = document.getElementById('lectureSearch').value.toLowerCase();
-    const cards = document.querySelectorAll('#lecturesList .item-card');
-
-    cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(searchTerm) ? 'block' : 'none';
-    });
+function editLecture(id) {
+    showToast('Edit lecture feature coming soon', 'warning');
 }

@@ -1,4 +1,4 @@
-const jwt = require('jwt');
+const jwt = require('jsonwebtoken');
 
 const authenticate = (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer', '');
@@ -25,4 +25,4 @@ const authorizeRole = (...allowedRoles) => {
     };
 };
 
-module.exports = { authenticate }
+module.exports = { authenticate, authorizeRole }
