@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Assignment = require('../models/Assignment');
+const { authenticate, authorizeRole } = require('../middleware/authMiddleware');
 
 router.get('/', async (req, res) => {
 
@@ -55,7 +56,7 @@ router.patch('/:id/', async (req, res) => {
     }
 });
 
-router.patch('/:id/submit', async (req, res) => {
+router.patch('/:id/submit', authenticate, authorizeRole('student'), async (req, res) => {
 
     try {
         const assgID = req.params.id;

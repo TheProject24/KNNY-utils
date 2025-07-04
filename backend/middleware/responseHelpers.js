@@ -11,4 +11,13 @@ const handleNotFound = (resource, res) => {
     return false;
 };
 
+
+const handleBadUserRequest = (resource, res) => {
+    if (!resource) {
+        res.status(400).json({ error: 'Invalid Credentials' });
+        return true;
+    }
+    return false;
+};
+
 module.exports = { handleNotFound, handleServerError}
