@@ -1,133 +1,85 @@
-document.addEventListener('DOMContentLoaded', function() {
-    checkAuthToken();
+const API_BASE = 'https://knny-utils-api.onrender.com/api';
+let currentSection = 'assignments';
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', function () {
+    setupNavigation();
+    setupForms();
     loadAssignments();
-    setupEventListeners();
+    loadLectures();
+    loadLinks();
+    loadSnippets();
 });
 
-function setupEventListeners() {
-    // Add Assignment Form
-    document.getElementById('addAssignmentForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const course = document.getElementById('assignmentCourse').value;
-        const instruction = document.getElementById('assignmentInstruction').value;
-        const dueDate = document.getElementById('assignmentDueDate').value;
-
-        try {
-            await apiRequest('/assignments', {
-                method: 'POST',
-                body: JSON.stringify({ course, instruction, dueDate })
-            });
-            
-            closeModal('addAssignmentModal');
-            showToast('Assignment added successfully', 'success');
-            loadAssignments();
-            e.target.reset();
-        } catch (error) {
-            showToast('Failed to add assignment: ' + error.message, 'error');
-        }
-    });
-
-    // Add Lecture Form
-    document.getElementById('addLectureForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('lectureTitle').value;
-        const description = document.getElementById('lectureDescription').value;
-        const files = document.getElementById('lectureFiles').files;
-
-        try {
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('description', description);
-            for (let file of files) {
-                formData.append('files', file);
-            }
-
-            await fetch(`${API_BASE_URL}/lectures`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: formData
-            });
-            
-            closeModal('addLectureModal');
-            showToast('Lecture added successfully', 'success');
-            loadLectures();
-            e.target.reset();
-            document.getElementById('lectureFileList').innerHTML = '';
-        } catch (error) {
-            showToast('Failed to add lecture: ' + error.message, 'error');
-        }
-    });
-
-    // Add Link Form
-    document.getElementById('addLinkForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('linkTitle').value;
-        const url = document.getElementById('linkUrl').value;
-        const tag = document.getElementById('linkTag').value || 'Generic';
-
-        try {
-            await apiRequest('/links', {
-                method: 'POST',
-                body: JSON.stringify({ title, url, tag })
-            });
-            
-            closeModal('addLinkModal');
-            showToast('Link added successfully', 'success');
-            loadLinks();
-            e.target.reset();
-        } catch (error) {
-            showToast('Failed to add link: ' + error.message, 'error');
-        }
-    });
-
-    // Add Snippet Form
-    document.getElementById('addSnippetForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('snippetTitle').value;
-        const language = document.getElementById('snippetLanguage').value;
-        const code = document.getElementById('snippetCode').value;
-        const tags = document.getElementById('snippetTags').value || 'Random';
-        const description = document.getElementById('snippetDescription').value || 'No Description';
-
-        try {
-            await apiRequest('/snippets', {
-                method: 'POST',
-                body: JSON.stringify({ title, language, code, tags, description })
-            });
-            
-            closeModal('addSnippetModal');
-            showToast('Snippet added successfully', 'success');
-            loadSnippets();
-            e.target.reset();
-        } catch (error) {
-            showToast('Failed to add snippet: ' + error.message, 'error');
-        }
-    });
-
-    // File Upload Preview
-    document.getElementById('lectureFiles').addEventListener('change', function(e) {
-        const fileList = document.getElementById('lectureFileList');
-        fileList.innerHTML = '';
-        
-        Array.from(e.target.files).forEach(file => {
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-item';
-            fileItem.innerHTML = `
-                <span>${file.name}</span>
-                <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>
-            `;
-            fileList.appendChild(fileItem);
+// Navigation
+function setupNavigation() {
+    const tabs = document.querySelectorAll('.nav-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            const section = this.dataset.section;
+            switchSection(section);
         });
     });
+}
 
-    // Close Modals on Outside Click
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal(this.id);
-            }
-        });
+function switchSection(section) {
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
     });
+    document.querySelector(`[data-section="${section}"]`).classList.add('active');
+
+    document.querySelectorAll('.section').forEach(sec => {
+        sec.classList.remove('active');
+    });
+    document.getElementById(section).classList.add('active');
+
+    currentSection = section;
+}
+
+// Form setup
+function setupForms() {
+    document.getElementById('assignmentForm').addEventListener('submit', handleAssignmentSubmit);
+    document.getElementById('lectureForm').addEventListener('submit', handleLectureSubmit);
+    document.getElementById('linkForm').addEventListener('submit', handleLinkSubmit);
+    document.getElementById('snippetForm').addEventListener('submit', handleSnippetSubmit);
+    document.getElementById('tagFilter').addEventListener('change', handleTagFilter);
+}
+
+// API helpers
+async function apiRequest(endpoint, options = {}) {
+    try {
+        const response = await fetch(`${API_BASE}${endpoint}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('API request failed:', error);
+        showError('Request failed. Please try again.');
+        throw error;
+    }
+}
+
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    document.body.insertBefore(errorDiv, document.body.firstChild);
+    setTimeout(() => errorDiv.remove(), 5000);
+}
+
+function showSuccess(message) {
+    const successDiv = document.createElement('div');
+    successDiv.className = 'success-message';
+    successDiv.textContent = message;
+    document.body.insertBefore(successDiv, document.body.firstChild);
+    setTimeout(() => successDiv.remove(), 3000);
 }
